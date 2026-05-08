@@ -8,11 +8,13 @@ import (
 )
 
 func main() {
-	fmt.Print("$ ")
-	reader := bufio.NewReader(os.Stdin)
-	line, err := reader.ReadString('\n')
-	if err != nil {
-		log.Fatal(err)
+	for {
+		fmt.Print("$ ")
+		reader := bufio.NewReader(os.Stdin)
+		line, err := reader.ReadString('\n')
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Printf("%s: command not found\n", line[:len(line)-1])
 	}
-	fmt.Printf("%s: command not found", line[:len(line)-1])
 }
