@@ -15,6 +15,10 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("%s: command not found\n", line[:len(line)-1])
+		command := line[:len(line)-1]
+		if command == "exit" {
+			break
+		}
+		fmt.Printf("%s: command not found\n", command)
 	}
 }
