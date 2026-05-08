@@ -17,5 +17,5 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("%s: command not found", line)
+	fmt.Printf("%s: command not found", line[:len(line)-1])
 }
