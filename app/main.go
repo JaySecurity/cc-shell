@@ -6,7 +6,6 @@ import (
 	"log"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"strings"
 )
 
@@ -30,8 +29,6 @@ func main() {
 
 	ctx := &CommandContext{Registry: commands}
 
-	// fmt.Println("Shell started. Type 'exit' to quit.")
-
 	for {
 		fmt.Print("$ ")
 		reader := bufio.NewReader(os.Stdin)
@@ -44,6 +41,12 @@ func main() {
 		command, ok := commands[args[0]]
 		if ok {
 			command.Action(args, ctx)
+		} else if checkCmd(args[0]) != "" {
+			out, err := exec.Command(args[0], args[1:]...).Output()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(string(out))
 		} else {
 			fmt.Printf("%s: command not found\n", args[0])
 		}
@@ -71,18 +74,22 @@ func getType(args []string, ctx *CommandContext) {
 		if ok {
 			fmt.Printf("%s is a shell %s\n", cmd.Name, cmd.Type)
 		} else {
-			sysPath := os.Getenv("PATH")
-			paths := filepath.SplitList(sysPath)
-			if len(paths) > 1 {
-				filepath, err := exec.LookPath(args[1])
-				if err == nil {
-					fmt.Printf("%s is %s\n", args[1], filepath)
-					return
-				}
+			filepath := checkCmd(args[1])
+			if filepath != "" {
+				fmt.Printf("%s is %s\n", args[1], filepath)
+				return
 			}
 			fmt.Printf("%s: not found\n", args[1])
 		}
 	}
+}
+
+func checkCmd(cmd string) string {
+	filepath, err := exec.LookPath(cmd)
+	if err != nil {
+		return ""
+	}
+	return filepath
 }
 
 func register(commands map[string]Command, name string, cmdType string, action CommandHandler) {
