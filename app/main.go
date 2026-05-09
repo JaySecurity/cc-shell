@@ -72,7 +72,6 @@ func getType(args []string, ctx *CommandContext) {
 			fmt.Printf("%s: not found\n", args[1])
 		}
 	}
-	fmt.Printf("\n")
 }
 
 func register(commands map[string]Command, name string, cmdType string, action CommandHandler) {
