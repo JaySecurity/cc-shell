@@ -74,13 +74,10 @@ func getType(args []string, ctx *CommandContext) {
 }
 
 func register(commands map[string]Command, name string, cmdType string, action CommandHandler) {
-	fmt.Println("Registered")
-
 	cmd := Command{
 		Name:   name,
 		Type:   cmdType,
 		Action: action,
 	}
-
 	commands[name] = cmd
 }
