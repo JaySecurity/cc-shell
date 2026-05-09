@@ -46,7 +46,7 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println(string(out))
+			fmt.Printf("%s", string(out))
 		} else {
 			fmt.Printf("%s: command not found\n", args[0])
 		}
