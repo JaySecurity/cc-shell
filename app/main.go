@@ -26,6 +26,7 @@ func main() {
 	register(commands, "echo", "builtin", handleEcho)
 	register(commands, "exit", "builtin", handleExit)
 	register(commands, "type", "builtin", getType)
+	register(commands, "pwd", "builtin", pwd)
 
 	ctx := &CommandContext{Registry: commands}
 
@@ -64,6 +65,14 @@ func handleEcho(args []string, ctx *CommandContext) {
 func handleExit(_ []string, _ *CommandContext) {
 	// fmt.Println("Goodbye!")
 	os.Exit(0)
+}
+
+func pwd(_ []string, _ *CommandContext) {
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(dir)
 }
 
 func getType(args []string, ctx *CommandContext) {
