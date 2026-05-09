@@ -27,7 +27,9 @@ func main() {
 	register(commands, "type", "builtin", getType)
 
 	ctx := &CommandContext{Registry: commands}
-	fmt.Println("Shell started. Type 'exit' to quit.")
+
+	// fmt.Println("Shell started. Type 'exit' to quit.")
+
 	for {
 		fmt.Print("$ ")
 		reader := bufio.NewReader(os.Stdin)
