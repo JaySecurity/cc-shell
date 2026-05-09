@@ -67,7 +67,7 @@ func getType(args []string, ctx *CommandContext) {
 	} else {
 		cmd, ok := ctx.Registry[args[1]]
 		if ok {
-			fmt.Printf("%s is a shell %s", cmd.Name, cmd.Type)
+			fmt.Printf("%s is a shell %s\n", cmd.Name, cmd.Type)
 		} else {
 			fmt.Printf("%s: not found\n", args[1])
 		}
