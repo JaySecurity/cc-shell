@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -69,6 +71,15 @@ func getType(args []string, ctx *CommandContext) {
 		if ok {
 			fmt.Printf("%s is a shell %s\n", cmd.Name, cmd.Type)
 		} else {
+			sysPath := os.Getenv("PATH")
+			paths := filepath.SplitList(sysPath)
+			if len(paths) > 1 {
+				filepath, err := exec.LookPath(args[1])
+				if err == nil {
+					fmt.Printf("%s is %s\n", args[1], filepath)
+					return
+				}
+			}
 			fmt.Printf("%s: not found\n", args[1])
 		}
 	}
