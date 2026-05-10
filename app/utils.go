@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 )
 
@@ -38,6 +37,6 @@ func ParseArgs(input string) ([]string, error) {
 		args = append(args, current.String())
 	}
 
-	fmt.Println(args, len(args))
+	// fmt.Println(args, len(args))
 	return args, nil
 }
