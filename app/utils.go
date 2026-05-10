@@ -19,7 +19,7 @@ func ParseArgs(input string) ([]string, error) {
 			escaped = false
 			continue
 		}
-		if r == '\\' {
+		if r == '\\' && !isSingleQuote {
 			escaped = true
 			continue
 		}
