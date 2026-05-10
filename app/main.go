@@ -27,6 +27,7 @@ func main() {
 	register(commands, "exit", "builtin", handleExit)
 	register(commands, "type", "builtin", getType)
 	register(commands, "pwd", "builtin", pwd)
+	register(commands, "cd", "builtin", handleChange)
 
 	ctx := &CommandContext{Registry: commands}
 
