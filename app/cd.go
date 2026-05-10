@@ -18,7 +18,6 @@ func handleChange(args []string, _ *CommandContext) {
 	} else if strings.HasPrefix(args[1], "../") {
 		fmt.Println("Back from CWD ")
 	} else if strings.HasPrefix(args[1], "/") {
-		fmt.Println("Absolute")
 		if err := os.Chdir(args[1]); err != nil {
 			fmt.Printf("cd: %s: No such file or directory\n", args[1])
 		}
