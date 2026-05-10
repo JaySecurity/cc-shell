@@ -17,12 +17,18 @@ func handleChange(args []string, _ *CommandContext) {
 			fmt.Printf("cd: %s: No such file or directory\n", path)
 		}
 	} else if path, found := strings.CutPrefix(args[1], "./"); found {
-		// path := strings.TrimPrefix(args[1], "./")
 		if err := os.Chdir(path); err != nil {
 			fmt.Printf("cd: %s: No such file or directory\n", path)
 		}
 	} else if strings.HasPrefix(args[1], "../") {
-		fmt.Println("Back from CWD ")
+		if err := os.Chdir(args[1]); err != nil {
+			fmt.Printf("cd: %s: No such file or directory\n", args[1])
+		}
+		// cwd, err := os.Getwd()
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+		// segments := strings.Split(args[1], "/")
 	} else if strings.HasPrefix(args[1], "/") {
 		if err := os.Chdir(args[1]); err != nil {
 			fmt.Printf("cd: %s: No such file or directory\n", args[1])
