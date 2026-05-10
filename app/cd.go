@@ -11,7 +11,7 @@ func handleChange(args []string, _ *CommandContext) {
 	home := os.Getenv("HOME")
 	if len(args) <= 1 {
 		os.Chdir(home)
-	} else if path, found := strings.CutPrefix(args[1], "~/"); found {
+	} else if path, found := strings.CutPrefix(args[1], "~"); found {
 		path = filepath.Join(home, path)
 		if err := os.Chdir(path); err != nil {
 			fmt.Printf("cd: %s: No such file or directory\n", path)
