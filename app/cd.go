@@ -7,7 +7,7 @@ import (
 )
 
 func handleChange(args []string, _ *CommandContext) {
-	path := ""
+	// path := ""
 	home := os.Getenv("HOME")
 	if len(args) <= 1 {
 		os.Chdir(home)
@@ -24,5 +24,4 @@ func handleChange(args []string, _ *CommandContext) {
 	} else {
 		fmt.Println("Relative to CWD")
 	}
-	fmt.Printf("Change to %s", path)
 }
