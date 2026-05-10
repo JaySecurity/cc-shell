@@ -10,10 +10,19 @@ func ParseArgs(input string) ([]string, error) {
 
 	isSingleQuote := false
 	isDoubleQuote := false
-	// escaped := false
+	escaped := false
 
 	for _, r := range input {
 
+		if escaped {
+			current.WriteRune(r)
+			escaped = false
+			continue
+		}
+		if r == '\\' {
+			escaped = true
+			continue
+		}
 		if r == '"' && !isSingleQuote {
 			isDoubleQuote = !isDoubleQuote
 			continue
