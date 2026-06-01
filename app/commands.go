@@ -9,76 +9,73 @@ import (
 	"strings"
 )
 
-func handleChange(args []string, _ *CommandContext) {
+func handleChange(input *CommandInput, _ *CommandContext) (output []byte, err error) {
 	home := os.Getenv("HOME")
+	args := string(input.args)
 	if len(args) <= 1 {
 		os.Chdir(home)
-	} else if path, found := strings.CutPrefix(args[1], "~"); found {
+	} else if path, found := strings.CutPrefix(args, "~"); found {
 		path = filepath.Join(home, path)
 		if err := os.Chdir(path); err != nil {
-			fmt.Printf("cd: %s: No such file or directory\n", path)
+			output = fmt.Appendf(nil, "cd: %s: No such file or directory\n", path)
 		}
-	} else if path, found := strings.CutPrefix(args[1], "./"); found {
+	} else if path, found := strings.CutPrefix(args, "./"); found {
 		if err := os.Chdir(path); err != nil {
-			fmt.Printf("cd: %s: No such file or directory\n", path)
+			output = fmt.Appendf(nil, "cd: %s: No such file or directory\n", path)
 		}
-	} else if strings.HasPrefix(args[1], "../") {
-		if err := os.Chdir(args[1]); err != nil {
-			fmt.Printf("cd: %s: No such file or directory\n", args[1])
+	} else if strings.HasPrefix(args, "../") {
+		if err := os.Chdir(args); err != nil {
+			output = fmt.Appendf(nil, "cd: %s: No such file or directory\n", args)
 		}
-		// cwd, err := os.Getwd()
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
-		// segments := strings.Split(args[1], "/")
-	} else if strings.HasPrefix(args[1], "/") {
-		if err := os.Chdir(args[1]); err != nil {
-			fmt.Printf("cd: %s: No such file or directory\n", args[1])
+	} else if strings.HasPrefix(args, "/") {
+		if err := os.Chdir(args); err != nil {
+			output = fmt.Appendf(nil, "cd: %s: No such file or directory\n", args)
 		}
 	} else {
-		if err := os.Chdir(args[1]); err != nil {
-			fmt.Printf("cd: %s: No such file or directory\n", args[1])
+		if err := os.Chdir(args); err != nil {
+			output = fmt.Appendf(nil, "cd: %s: No such file or directory\n", args)
 		}
 	}
+	return output, nil
 }
 
-func handleEcho(args []string, ctx *CommandContext) {
-	args = args[1:]
-	for _, arg := range args {
-		fmt.Printf("%s ", arg)
-	}
-	fmt.Printf("\n")
+func handleEcho(input *CommandInput, ctx *CommandContext) (output []byte, err error) {
+	args := input.args
+	output = append(args, '\n')
+	return output, nil
 }
 
-func handleExit(_ []string, _ *CommandContext) {
-	// fmt.Println("Goodbye!")
-	os.Exit(0)
+func handleExit(_ *CommandInput, _ *CommandContext) ([]byte, error) {
+	return []byte("quit"), nil
 }
 
-func pwd(_ []string, _ *CommandContext) {
+func pwd(_ *CommandInput, _ *CommandContext) (output []byte, err error) {
 	dir, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(dir)
+	output = fmt.Appendf([]byte(dir), "\n")
+	return output, nil
 }
 
-func getType(args []string, ctx *CommandContext) {
-	if len(args) < 1 {
+func getType(input *CommandInput, ctx *CommandContext) (output []byte, err error) {
+	command := string(input.args)
+	if len(command) < 1 {
 		return
 	} else {
-		cmd, ok := ctx.Registry[args[1]]
+		cmd, ok := ctx.Registry[command]
 		if ok {
-			fmt.Printf("%s is a shell %s\n", cmd.Name, cmd.Type)
+			output = fmt.Appendf(nil, "%s is a shell %s\n", cmd.Name, cmd.Type)
 		} else {
-			filepath := checkCmd(args[1])
+			filepath := checkCmd(command)
 			if filepath != "" {
-				fmt.Printf("%s is %s\n", args[1], filepath)
-				return
+				output = fmt.Appendf(nil, "%s is %s\n", command, filepath)
+				return output, nil
 			}
-			fmt.Printf("%s: not found\n", args[1])
+			output = fmt.Appendf(nil, "%s: not found\n", command)
 		}
 	}
+	return output, err
 }
 
 func checkCmd(cmd string) string {
