@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 type CommandContext struct {
@@ -60,7 +61,8 @@ func main() {
 			out, err = command.Action(input, ctx)
 		} else if checkCmd(input.command) != "" {
 			if len(input.args) > 0 {
-				out, err = exec.Command(input.command, string(input.args)).Output()
+				args := strings.Fields(string(input.args))
+				out, err = exec.Command(input.command, args...).Output()
 			} else {
 				out, err = exec.Command(input.command).Output()
 			}
@@ -77,7 +79,7 @@ func main() {
 		}
 		switch input.redirect {
 		case None:
-			fmt.Printf("%s\n", string(out))
+			fmt.Printf("%s", string(out))
 		case Write:
 			// fmt.Println(input.redirect, input.dest)
 			err := os.WriteFile(input.dest, out, 0o666)
